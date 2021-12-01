@@ -1,0 +1,33 @@
+
+//Part1:
+var input = @"--INPUT HERE--";
+var rows = input.Split('\r');
+int count = 0;
+var lastNo = int.Parse(rows[0]);
+foreach(var row in rows)
+{
+    if(lastNo < int.Parse(row))
+    {
+        count++;
+    }
+    lastNo = int.Parse(row);
+}
+return "count: " + count;
+
+
+//Part2:
+var input = @"--INPUT HERE--";
+var rows = input.Split('\r');
+int count = 0;
+var lastSum = int.Parse(rows[0]) + int.Parse(rows[1]) + int.Parse(rows[2]);
+for (int i = 1; i < rows.Length -2; i++)
+{
+    var thisSum = int.Parse(rows[i]) + int.Parse(rows[i + 1]) + int.Parse(rows[i + 2]);
+    if (lastSum < thisSum)
+    {
+        count++;
+    }
+    lastSum = thisSum;
+}
+
+return "count: " + count;
