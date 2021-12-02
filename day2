@@ -1,0 +1,25 @@
+//Part1
+
+ var input = @"";
+var rows = input.Split('\r');
+var currentDepth = 0;
+var currentPos = 0;
+
+foreach(var row in rows)
+{
+    var r = row.Split(' ');
+    if(r[0].Trim('\n') == "forward")
+    {
+        currentPos += int.Parse(r[1]);
+    }
+    else if(r[0].Trim('\n') == "down")
+    {
+        currentDepth += int.Parse(r[1]);
+    }
+    else if(r[0].Trim('\n') == "up")
+    {
+        currentDepth -= int.Parse(r[1]);
+    }
+}
+
+return "currentPos: " + currentPos + " currentDepth: " + currentDepth + " total:" + (currentDepth * currentPos);
