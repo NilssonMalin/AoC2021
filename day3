@@ -1,4 +1,5 @@
 //Part1
+var input = @"";
 var rows = input.Split('\n');
 var total = rows.Length;
 var resultC = new int[rows[0].Trim('\r').Length];
@@ -32,3 +33,67 @@ int g = Convert.ToInt32(gamma, 2);
 int e = Convert.ToInt32(epsilon, 2);
 
 return "gamma " + g + " epsilon " + e + " total " + (g * e); 
+
+//Part2
+var input = @"";
+var rows = input.Split('\n');
+rows = rows.Select(x => x.Trim('\r')).ToArray();
+
+
+var a= new List<string>(rows);
+var b = new List<string>(rows);
+for (int i = 0; i < rows[0].Length; i++)
+{
+
+    var resultA = new int[a[0].Length];
+    foreach (var ai in a)
+    {
+        for (int j = 0; j < ai.Count(); j++)
+        {
+            resultA[j] += int.Parse(ai[j].ToString());
+        }
+    }
+
+    var resultB = new int[b[0].Length];
+    foreach (var bi in b)
+    {
+        for (int j = 0; j < bi.Count(); j++)
+        {
+            resultB[j] += int.Parse(bi[j].ToString());
+        }
+    }
+
+
+    if (a.Count() > 1)
+    {
+        if (resultA[i] * 2 >= a.Count)
+        {
+
+            //flest (eller lika många) ettor
+            a = a.Where(x => int.Parse(x[i].ToString()) == 1).ToList();
+        }
+        else
+        {
+            //flest nollor
+            a = a.Where(x => int.Parse(x[i].ToString()) == 0).ToList();
+        }
+    }
+    if (b.Count() > 1)
+    {
+        if (resultB[i] * 2 < b.Count)
+        {
+            //flest  nollor = spara ettor
+            b = b.Where(x => int.Parse(x[i].ToString()) == 1).ToList();
+        }
+        else
+        {
+            //flest ettor (eller lika många ) = spara nollan
+            b = b.Where(x => int.Parse(x[i].ToString()) == 0).ToList();
+        }
+    }
+}
+
+var aa = Convert.ToInt32(a.First(), 2);
+var bb = Convert.ToInt32(b.First(), 2);
+
+return "aa " + aa + " bb " + bb + " total " + (aa * bb);
