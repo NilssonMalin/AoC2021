@@ -1,0 +1,34 @@
+//Part1
+var rows = input.Split('\n');
+var total = rows.Length;
+var resultC = new int[rows[0].Trim('\r').Length];
+foreach(var row in rows)
+{
+    var r = row.Trim('\r').ToCharArray();
+    for(int i = 0; i < r.Length; i++)
+    {
+        resultC[i] += int.Parse(r[i].ToString());
+    }
+}
+
+var gamma = "";
+var epsilon = "";
+foreach(var c in resultC)
+{
+    if((c * 2) > total)
+    {
+        gamma = gamma + "1";
+        epsilon = epsilon + "0";
+    }
+    else
+    {
+        gamma = gamma + "0";
+        epsilon = epsilon + "1";
+    }
+}
+
+
+int g = Convert.ToInt32(gamma, 2);
+int e = Convert.ToInt32(epsilon, 2);
+
+return "gamma " + g + " epsilon " + e + " total " + (g * e); 
