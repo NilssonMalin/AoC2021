@@ -1,0 +1,129 @@
+//Part 1
+var rows = input.Split('\n');
+rows = rows.Select(x => x.Trim('\r')).ToArray();
+
+var bingoInput = rows[0];
+
+var listOfBoards = new List<List<List<int>>>();
+var listOfResults = new List<List<List<int>>>();
+
+foreach (var row in rows.Skip(1))
+{
+    if (row == "")
+    {
+        //ny bricka
+        listOfBoards.Add(new List<List<int>>());
+        listOfResults.Add(new List<List<int>>());
+    }
+    else
+    {
+        var intRow = row.Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList();
+        listOfBoards.Last().Add(intRow);
+
+        var empty = new int[intRow.Count];
+        listOfResults.Last().Add(empty.ToList());
+    }
+}
+
+foreach(var bingoNumber in bingoInput.Split(','))
+{
+    int bingoNo = int.Parse(bingoNumber);
+    for(int i = 0; i < listOfBoards.Count; i++)
+    {
+        var board = listOfBoards[i];
+        bool found = false;
+
+        for (int j = 0; j < board.Count; j++)
+        {
+            var boardRow = board[j];
+            for(var k = 0; k < boardRow.Count; k++)
+            {
+                var boardCell = boardRow[k];
+                if (boardCell == bingoNo)
+                {
+                    //Hit!
+                    found = true;
+                    listOfResults[i][j][k] = 1;
+
+                    var hasBingo = CheckBingo(listOfResults[i]);
+
+                    if (hasBingo)
+                    {
+                       long unmarkedSum = CountUnmarked(listOfBoards[i], listOfResults[i]);
+                        return "unmarkedSum " + unmarkedSum + " currentBingoNumber " + bingoNo + " total " + (unmarkedSum * bingoNo);
+
+                    }
+
+                    break;
+                }
+            }
+            if (found) break;
+        }
+    }
+}
+return "no bingo";
+            
+            
+            
+            
+            
+     private long CountUnmarked(List<List<int>> board, List<List<int>> result)
+{
+    long sum = 0;
+    for(int i = 0; i< board.Count; i++)
+    {
+        var row = board[i];
+        for(int j = 0; j< row.Count; j++)
+        {
+            var multiplier = (result[i][j] == 1 ? 0 : 1);
+            sum += board[i][j] * multiplier;
+        }
+    }
+    return sum;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//hjälpmetoder
+private bool CheckBingo(List<List<int>> board)
+{
+    var hasBingo = false;
+    for (int i = 0; i < board.Count; i++)
+    {
+        var boardRow = board[i];
+        var sum = boardRow.Sum(x => x);
+        if(sum == boardRow.Count)
+        {
+            hasBingo = true;
+            break;
+        }
+    }
+
+    if (!hasBingo)
+    {
+        for (int j = 0; j < board[0].Count; j++)
+        {
+            var column = board.Select(x => x[j]).ToList();
+
+            var colSum = column.Sum(x => x);
+            if (colSum == column.Count)
+            {
+                hasBingo = true;
+                break;
+            }
+        }
+    }
+    return hasBingo;
+}
