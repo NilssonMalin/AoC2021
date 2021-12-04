@@ -130,10 +130,6 @@ foreach(var bingoNumber in bingoInput.Split(','))
                              long unmarkedSum = CountUnmarked(listOfBoards[lastBoard], listOfResults[lastBoard]);
                             return " lastBoard " + lastBoard + "unmarkedSum " + unmarkedSum + " currentBingoNumber " + bingoNo + " total " + (unmarkedSum * bingoNo);
                         }
-
-                        // long unmarkedSum = CountUnmarked(listOfBoards[i], listOfResults[i]);
-                        // return "unmarkedSum " + unmarkedSum + " currentBingoNumber " + bingoNo + " total " + (unmarkedSum * bingoNo);
-
                     }
 
                     break;
