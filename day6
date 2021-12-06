@@ -27,10 +27,4 @@ for (int i = 0; i < noOfDays; i++)
     fishAges[7] = fishAges[8];
     fishAges[8] = noOfNewFish;
 }
-long total = 0;
-for(int i = 0; i< 9;i++)
-{
-    total += fishAges[i];
-}
-
-return "total " + total;
+return "total " + fishAges.Sum(x => x);
