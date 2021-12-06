@@ -1,0 +1,36 @@
+var input = @"";
+var listOfFish = input.Split(',').ToList().Select(x => int.Parse(x)).ToList();
+
+var fishAges = new long[9];
+fishAges[0] = listOfFish.Count(x => x == 0);
+fishAges[1] = listOfFish.Count(x => x == 1);
+fishAges[2] = listOfFish.Count(x => x == 2);
+fishAges[3] = listOfFish.Count(x => x == 3);
+fishAges[4] = listOfFish.Count(x => x == 4);
+fishAges[5] = listOfFish.Count(x => x == 5);
+fishAges[6] = listOfFish.Count(x => x == 6);
+fishAges[7] = listOfFish.Count(x => x == 7);
+fishAges[8] = listOfFish.Count(x => x == 8);
+
+var noOfDays = 256; //80 Part1
+
+for (int i = 0; i < noOfDays; i++)
+{
+    var noOfNewFish = fishAges[0];
+    fishAges[0] = fishAges[1];
+    fishAges[1] = fishAges[2];
+    fishAges[2] = fishAges[3];
+    fishAges[3] = fishAges[4];
+    fishAges[4] = fishAges[5];
+    fishAges[5] = fishAges[6];
+    fishAges[6] = fishAges[7] + noOfNewFish; 
+    fishAges[7] = fishAges[8];
+    fishAges[8] = noOfNewFish;
+}
+long total = 0;
+for(int i = 0; i< 9;i++)
+{
+    total += fishAges[i];
+}
+
+return "total " + total;
