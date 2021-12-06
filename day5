@@ -1,0 +1,75 @@
+//Part 1 and 2
+var input = @"";
+var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+var board = new int[1000, 1000];
+
+foreach (var row in rows)
+{
+    var r = row.Split(new string[] { ",", " -> " }, StringSplitOptions.RemoveEmptyEntries);
+    var x1 = int.Parse(r[0]);
+    var y1 = int.Parse(r[1]);
+    var x2 = int.Parse(r[2]);
+    var y2 = int.Parse(r[3]);
+
+
+    if (x1 == x2 || y1 == y2)
+    {
+        if (x1 > x2)
+        {
+            var temp = x2;
+            x2 = x1;
+            x1 = temp;
+        }
+        if (y1 > y2)
+        {
+            var temp = y2;
+            y2 = y1;
+            y1 = temp;
+        }
+
+        for (int i = x1; i <= x2; i++)
+        {
+            for (int j = y1; j <= y2; j++)
+            {
+                board[i, j]++;
+            }
+        }
+    }
+    else  //Added for part 2
+    {
+        if (x1 < x2)
+        {
+            int j = y1;
+            for (int i = x1; i <= x2; i++)
+            {
+                board[i, j]++;
+                j = (y1 < y2) ? j + 1 : j - 1;
+            }
+        }
+        else
+        {
+            int j = y1;
+            for (int i = x1; i>= x2; i--)
+            {
+                board[i, j]++;
+                j = (y1 < y2) ? j + 1 : j - 1;
+            }
+        }
+    }
+}
+
+var counter = 0;
+
+for (int i = 0; i < 1000; i++)
+{
+    for (int j = 0; j < 1000; j++)
+    {
+        if (board[i, j] >= 2)
+        {
+            counter++;
+        }
+    }
+}
+
+
+return " counter " + counter;
