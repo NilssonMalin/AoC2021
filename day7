@@ -1,0 +1,52 @@
+//Part1
+var input = @"";
+var rows = input.Split(',').Select(x => int.Parse(x)).OrderBy(y => y);
+
+var lowest = rows.First();
+var highest = rows.Last();
+long fuel = 0;
+for(var i = lowest; i <= highest; i++)
+{
+    var tempFuel = rows.Sum(x => (long)Math.Abs(x - i));
+    if(i == lowest || tempFuel < fuel)
+    {
+        fuel = tempFuel;
+    }
+}
+
+return "fuel " + fuel;
+
+
+
+
+//Part2
+ 
+var input = @"";
+var rows = input.Split(',').Select(x => int.Parse(x)).OrderBy(y => y);
+
+var lowest = rows.First();
+var highest = rows.Last();
+long fuel = 0;
+for(var i = lowest; i <= highest; i++)
+{
+    var tempFuel = rows.Sum(x => Diff(x, i));
+    if(i == lowest || tempFuel < fuel)
+    {
+        fuel = tempFuel;
+    }
+}
+return "fuel " + fuel;
+
+
+
+private long Diff(int x, int i)
+{
+    var diff = Math.Abs(x - i);
+    long result = 0;
+    while(diff > 0)
+    {
+        result += diff;
+        diff--;
+    }
+    return result;
+}
