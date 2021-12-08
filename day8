@@ -1,0 +1,20 @@
+//Part 1
+
+var input = @"";
+var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+var noOfItems = 0;
+foreach(var row in rows)
+{
+    var s = row.Split('|')[1];
+    var items = s.Split(' ');
+    foreach(var item in items)
+    {
+        var i  = item.Trim();
+       if( i.Length == 2 || i.Length == 3 || i.Length == 4 || i.Length == 7)
+        {
+            noOfItems++;
+        }
+    }
+
+}
+return "noOfItems " + noOfItems;
