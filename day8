@@ -18,3 +18,106 @@ foreach(var row in rows)
 
 }
 return "noOfItems " + noOfItems;
+
+
+//Part2
+var input = @"";
+var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+var listOfResult = new List<string>();
+foreach (var row in rows)
+{
+    var left = row.Split('|')[0];
+    var leftItems = left.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+    var rigth = row.Split('|')[1];
+    var rigthItems = rigth.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+    var One = "".ToCharArray();
+    var Four = "".ToCharArray();
+    var Seven = "".ToCharArray();
+    foreach (var item in leftItems.Concat(rigthItems))
+    {
+        var i = item.Trim().ToCharArray();
+        if (i.Length == 2 ) // 1 = C,F
+        {
+            One = i;
+        }
+        else if(i.Length == 3) // 7 = A,C,F
+        {
+            Seven = i;
+        }
+        else if (  i.Length == 4 ) // 4 == B,C,D,F
+        {
+            Four = i;
+        }
+        else if (i.Length == 7) //8 = alla segment
+        {
+            //ger inget 
+        }
+    }
+    var result = "";
+
+    foreach(var item in rigthItems)
+    {
+        var i = item.Trim().ToCharArray();
+        switch (i.Length)
+        {
+            case 2:
+                //det är en 1
+                result += "1";
+                break;
+            case 3:
+                //det är en 7
+                result += "7";
+                break;
+            case 4:
+                //det är en 4
+                result += "4";
+                break;
+            case 5:
+                // 2,3 el 5
+                //om den innehåller både C och F (One) är det en 3
+                if (item.ToCharArray().Intersect(One).Count() == 2 && item.ToCharArray().Intersect(Seven).Count() == 3)
+                {
+                    result += "3";
+                }
+                //om den innehåller 3 av 4 från Four är den en 5
+                else if(item.ToCharArray().Intersect(Four).Count() == 3)
+                {
+                    result += "5";
+                }
+                else
+                {
+                    result += "2";
+                }
+                break;
+            case 6:
+                // 0,6 el 9
+                //om den innehåller alla för One och Four och Seven är det en 9
+                if(item.ToCharArray().Intersect(One).Count() == 2  && item.ToCharArray().Intersect(Four).Count() == 4 && item.ToCharArray().Intersect(Seven).Count() == 3)
+                {
+                    result += "9";
+                }
+                //om den innehåller alla för One och Seven är det en 0
+                else if (item.ToCharArray().Intersect(One).Count() == 2 && item.ToCharArray().Intersect(Seven).Count() == 3)
+                {
+                    result += "0";
+                }
+                else
+                {
+                    result += "6";
+                }
+                break;
+            case 7:
+                //det är en 8
+                result += "8";
+                break;
+        }
+    }
+    listOfResult.Add(result);
+
+}
+var sum = listOfResult.Sum(x => int.Parse(x));
+
+return "listOfResult" + string.Join(",", listOfResult)  + "sum " + sum;
+
