@@ -1,0 +1,41 @@
+var input =@"";
+var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+var lowPoints = new List<int>();
+for(int i = 0; i< rows.Length; i++)
+{
+    var cells = rows[i].ToCharArray();
+    for(int j = 0; j < cells.Length;j++)
+    {
+        var currentCell = int.Parse(cells[j].ToString());
+
+        int above = int.MaxValue;
+        if (i > 0)
+        {
+            above = int.Parse(rows[i - 1].ToCharArray()[j].ToString());
+        }
+        int left = int.MaxValue;
+        if (j > 0)
+        {
+            left = int.Parse(rows[i].ToCharArray()[j-1].ToString());
+        }
+        int right = int.MaxValue;
+        if (j < cells.Length -1)
+        {
+            right = int.Parse(rows[i].ToCharArray()[j +1].ToString());
+        }
+        int below = int.MaxValue;
+        if (i < rows.Length - 1)
+        {
+            below = int.Parse(rows[i + 1].ToCharArray()[j].ToString());
+        }
+
+        if(currentCell < above && currentCell < left && currentCell < right && currentCell < below)
+        {
+            //low point
+            lowPoints.Add(currentCell);
+        }
+    }
+}
+var sum = lowPoints.Sum(x => x + 1);
+
+return " lowPoints " + string.Join(", ", lowPoints) + " sum " + sum;
