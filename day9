@@ -1,3 +1,4 @@
+//Part 1 and 2
 var input =@"";
 var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 var lowPoints = new List<int>();
