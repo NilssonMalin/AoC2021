@@ -1,6 +1,7 @@
 var input =@"";
 var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 var lowPoints = new List<int>();
+var lowPointCoords = new List<string> ();
 for(int i = 0; i< rows.Length; i++)
 {
     var cells = rows[i].ToCharArray();
@@ -33,9 +34,49 @@ for(int i = 0; i< rows.Length; i++)
         {
             //low point
             lowPoints.Add(currentCell);
+            lowPointCoords.Add(i + "," + j);
         }
     }
 }
+
+var listOfSizes = new List<int>();
+foreach(var lowPointCoord in lowPointCoords)
+{
+    var lowPointx = int.Parse(lowPointCoord.Split(',')[0]);
+    var lowPointy = int.Parse(lowPointCoord.Split(',')[1]);
+
+    var size = CalculateBasin(lowPointx, lowPointy, rows, new List<string>());
+    listOfSizes.Add(size);
+}
+
+var topThree =   listOfSizes.OrderByDescending(x => x).Take(3);
+var total = 1;
+foreach(var item in topThree)
+{
+    total = total * item;
+}
+
 var sum = lowPoints.Sum(x => x + 1);
 
-return " lowPoints " + string.Join(", ", lowPoints) + " sum " + sum;
+return "lowPoints " + string.Join(", ", lowPoints) + " sum " + sum + ". topThree " + string.Join(", ", topThree) + " total " + total; 
+
+
+private int CalculateBasin(int x,int y, string[] rows, List<string> listOfProcessedCoords)
+{
+    int currentSize = 0;
+    if (!listOfProcessedCoords.Contains(x + "," + y) && 
+        x >= 0 && x < rows.Length && 
+        y >= 0 && y < rows[x].Length &&
+        int.Parse(rows[x][y].ToString()) < 9)
+    {
+        currentSize++;
+        listOfProcessedCoords.Add(x + "," + y);
+
+        //sök utåt
+        currentSize += CalculateBasin(x - 1, y, rows, listOfProcessedCoords);
+        currentSize += CalculateBasin(x, y - 1, rows, listOfProcessedCoords);
+        currentSize += CalculateBasin(x + 1, y, rows, listOfProcessedCoords);
+        currentSize += CalculateBasin(x, y + 1, rows, listOfProcessedCoords);
+    }
+    return currentSize;
+}
