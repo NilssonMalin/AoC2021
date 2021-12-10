@@ -1,14 +1,15 @@
-//Part1
+//Part1 and 2
+var input = @"";
 var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-var stack = "";
 var starts = new char[] { '(', '[', '{', '<' };
 var ends = new char[] { ')', ']', '}', '>' };
-
 var errors = "";
+var incompleteLines = new List<List<char>>();
+
 foreach(var row in rows)
 {
-    foreach(var c in row)
+    var stack = "";
+    foreach (var c in row)
     {
         if (starts.Contains(c))
         {
@@ -23,12 +24,31 @@ foreach(var row in rows)
         {
             //error
             errors += c;
+            stack = "";
             break;
         }
         else
         {
             stack = stack.Remove(stack.Length - 1, 1);
         }
+    }
+    if(stack.Length > 0)
+    {
+        //incomplete line
+        var end = "";
+        foreach(var c in stack)
+        {
+            if (c == '(')
+                end += ")";
+            else if (c == '[')
+                end += "]";
+            else if (c == '{')
+                end += "}";
+            else if (c == '<')
+                end += ">";
+        }
+
+        incompleteLines.Add(end.Reverse().ToList());
     }
 }
 var total = 0;
@@ -44,6 +64,26 @@ foreach(var c in errors)
     else if (c == '>')
         total += 25137;
 }
+var lineTotals = new List<long>();
+foreach(var incompleteLine in incompleteLines)
+{
+    long lineTotal = 0;
+    foreach(var c in incompleteLine)
+    {
+        lineTotal = lineTotal * 5;
+        if (c == ')')
+            lineTotal += 1;
+        else if (c == ']')
+            lineTotal += 2;
+        else if (c == '}')
+            lineTotal += 3;
+        else if (c == '>')
+            lineTotal += 4;
 
+    }
+    lineTotals.Add(lineTotal);
+}
+lineTotals = lineTotals.OrderBy(x => x).ToList();
+var middleTotal = lineTotals.Skip(lineTotals.Count / 2).Take(1).First();
 
-return "errors " + errors + " total " + total ;
+return "errors " + errors + " total " + total + " middleTotal " + middleTotal + " lineTotals "  + string.Join(", " , lineTotals) ; 
