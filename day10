@@ -1,0 +1,49 @@
+//Part1
+var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+var stack = "";
+var starts = new char[] { '(', '[', '{', '<' };
+var ends = new char[] { ')', ']', '}', '>' };
+
+var errors = "";
+foreach(var row in rows)
+{
+    foreach(var c in row)
+    {
+        if (starts.Contains(c))
+        {
+            stack += c;
+            continue;
+        }
+
+        var lastChar = stack.Last();
+        var cIndex = Array.IndexOf(ends, c);
+        var lIndex = Array.IndexOf(starts, lastChar);
+        if(cIndex != lIndex)
+        {
+            //error
+            errors += c;
+            break;
+        }
+        else
+        {
+            stack = stack.Remove(stack.Length - 1, 1);
+        }
+    }
+}
+var total = 0;
+
+foreach(var c in errors)
+{
+    if (c == ')')
+        total += 3;
+    else if (c == ']')
+        total += 57;
+    else if (c == '}')
+        total += 1197;
+    else if (c == '>')
+        total += 25137;
+}
+
+
+return "errors " + errors + " total " + total ;
