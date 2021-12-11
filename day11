@@ -1,0 +1,96 @@
+var input = @"";
+var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+var temp = rows.SelectMany(x => x.ToArray());
+var listOfOcto = temp.Select(x => int.Parse(x.ToString())).ToList();
+var numberOfSteps = int.MaxValue; //Part 1: 100;
+
+long numberOfFlashes = 0;
+
+var returnString = "";
+
+for(int i = 0; i < numberOfSteps; i++)
+{
+    listOfOcto = listOfOcto.Select(x => x + 1).ToList();
+
+    var octoToFlash = listOfOcto.Any(x => x == 10);
+
+    //om den blir 10 flashar den, sätt till 11 när den flashat för att markera det.
+    while (octoToFlash)
+    {
+        for (int j = 0; j < listOfOcto.Count; j++)
+        {
+            if (listOfOcto[j] == 10)
+            {
+                //flash happens
+                numberOfFlashes++;
+                listOfOcto[j] = 11;
+
+                //över
+                var o1 =  (j % 10 > 0) ? j - 11 : -1;
+                var o2 = j - 10;
+                var o3 = (j % 10 <  9) ? j - 9 : -1;
+                //bredvid
+                var b1 = (j % 10 > 0) ? j - 1 :-1;
+                var b2 = (j % 10 < 9) ? j + 1 : 100;
+                //under
+                var u1 = (j % 10 > 0) ? j + 9 : 100;
+                var u2 = j + 10;
+                var u3 = (j % 10 < 9) ? j + 11 : 100 ;
+
+                if(o1 >= 0)
+                {
+                    listOfOcto[o1] = listOfOcto[o1] > 9 ? listOfOcto[o1] : listOfOcto[o1] + 1;
+                }
+                if (o2 >= 0)
+                {
+                    listOfOcto[o2] = listOfOcto[o2] > 9 ? listOfOcto[o2] : listOfOcto[o2] + 1;
+                }
+                if (o3 >= 0)
+                {
+                    listOfOcto[o3] = listOfOcto[o3] > 9 ? listOfOcto[o3] : listOfOcto[o3] + 1;
+                }
+                if (b1 >= 0)
+                {
+                    listOfOcto[b1] = listOfOcto[b1] > 9 ? listOfOcto[b1] : listOfOcto[b1] + 1;
+                }
+                if (b2 < listOfOcto.Count)
+                {
+                    listOfOcto[b2] = listOfOcto[b2] > 9 ? listOfOcto[b2] : listOfOcto[b2] + 1;
+                }
+                if (u1 < listOfOcto.Count)
+                {
+                    listOfOcto[u1] = listOfOcto[u1] > 9 ? listOfOcto[u1] : listOfOcto[u1] + 1;
+                }
+                if (u2 < listOfOcto.Count)
+                {
+                    listOfOcto[u2] = listOfOcto[u2] > 9 ? listOfOcto[u2] : listOfOcto[u2] + 1;
+                }
+                if (u3 < listOfOcto.Count)
+                {
+                    listOfOcto[u3] = listOfOcto[u3] > 9 ? listOfOcto[u3] : listOfOcto[u3] + 1;
+                }
+
+            }
+        }
+
+        octoToFlash = listOfOcto.Any(x => x == 10);
+    }
+
+    //Part 2 --
+    var noOfFlashes = listOfOcto.Count(x => x > 9);
+    if (noOfFlashes == 100)
+    {
+        //alla samtidigt
+        returnString += " alla samtidigt i steg " + (i + 1) + " listOfOcto " + string.Join(", ", listOfOcto);
+        return returnString;
+    }
+    // -- Part 2
+
+    listOfOcto = listOfOcto.Select(x => x > 9 ? 0 : x).ToList();
+
+
+}
+//Return for Part 1
+return " listOfOcto " + string.Join(", ", listOfOcto) + " numberOfFlashes " + numberOfFlashes;
+
