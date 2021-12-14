@@ -1,0 +1,56 @@
+//Part1
+var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+var connections = rows.Select( x => x.Split('-'));
+var reversedConnections = new List<string[]>();
+foreach(var connection in connections)
+{
+    reversedConnections.Add(new string[] { connection[1], connection[0] });
+}
+connections = connections.Concat(reversedConnections);
+
+var routes = new List<List<string>>();
+routes.Add(new List<string> { "start" });
+var foundEnd = false;
+while (!foundEnd) {
+
+    var newroutes = new List<List<string>>();
+    foreach (var route in routes) {
+
+        if (route.Last() != "end")
+        {
+            var possibleNexts = new List<string>();
+            foreach (var connection in connections)
+            {
+                if (connection[0] == route.Last())
+                {
+                    if (connection[1].ToUpper() == connection[1] ||
+                        !route.Contains(connection[1]))
+                    {
+                        possibleNexts.Add(connection[1]);
+                    }
+                }
+            }
+
+            foreach (var possibleNext in possibleNexts)
+            {
+                newroutes.Add(route.Concat(new List<string> { possibleNext }).ToList());
+            }
+        }
+        else if(route.Last() == "end")
+        {
+            newroutes.Add(route);
+        }
+
+    }
+    newroutes = newroutes.Distinct().ToList();
+
+    routes = newroutes;
+
+    var ends = routes.Count(x => x.Last() == "end");
+    var all = routes.Count();
+    foundEnd = ends == all;
+}
+
+return "number of routes " + routes.Count + " " + string.Join("\r\n ", routes.Select(x => string.Join(", ", x)));
+
