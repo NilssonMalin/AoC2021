@@ -1,0 +1,72 @@
+//Part2
+  var foldInput = @"fold along x=655
+fold along y=447
+fold along x=327
+fold along y=223
+fold along x=163
+fold along y=111
+fold along x=81
+fold along y=55
+fold along x=40
+fold along y=27
+fold along y=13
+fold along y=6";
+
+var foldRow = foldInput.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+var folds = foldRow.Select(x => x.Split('=')[1]).ToArray();
+var foldDirections = foldRow.Select(x => x.Split('=')[0].EndsWith("y")).ToArray();
+var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+for (int f = 0; f < folds.Count(); f++) //Part 1: for (int f = 0; f < 1; f++) 
+{
+    var foldNumber = int.Parse(folds[f]);
+    bool foldY = foldDirections[f];
+    for (int i = 0; i < rows.Length; i++)
+    {
+        var rowX = rows[i].Split(',')[0];
+        var rowY = rows[i].Split(',')[1];
+        if (foldY)
+        {
+            if (int.Parse(rowY) > foldNumber)
+                rowY = (2 * foldNumber) - int.Parse(rowY) + "";
+        }
+        else
+        {
+            if (int.Parse(rowX) > foldNumber)
+            {
+                rowX = (2 * foldNumber) - int.Parse(rowX) + "";
+            }
+        }
+        rows[i] = rowX + "," + rowY;
+    }
+}
+rows = rows.Distinct().ToArray();
+
+var maxX = rows.Max(x => int.Parse(x.Split(',')[0]));
+var maxY = rows.Max(x => int.Parse(x.Split(',')[1]));
+
+var result = new List<List<string>>();
+for(int i = 0; i<= maxX; i++)
+{
+    var n = new string[maxY + 1];
+    result.Add((n.Select( x => "-")).ToList());
+}
+
+
+
+
+foreach(var row in rows)
+{
+    var x = int.Parse(row.Split(',')[0]);
+    var y = int.Parse(row.Split(',')[1]);
+
+    result[x][y] = "#";
+}
+var print = "<br/>";
+foreach(var row in result)
+{
+    print += string.Join(" ", row) + "<br/>";
+}
+
+return "rows " + rows.Length + print;
