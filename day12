@@ -54,3 +54,93 @@ while (!foundEnd) {
 
 return "number of routes " + routes.Count + " " + string.Join("\r\n ", routes.Select(x => string.Join(", ", x)));
 
+
+//Part2
+var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+var connections = rows.Select(x => x.Split('-'));
+var reversedConnections = new List<string[]>();
+foreach (var connection in connections)
+{
+    reversedConnections.Add(new string[] { connection[1], connection[0] });
+}
+connections = connections.Concat(reversedConnections);
+
+var routes = new List<List<string>>();
+routes.Add(new List<string> { "start" });
+var foundEnd = false;
+while (!foundEnd)
+{
+
+    var newroutes = new List<List<string>>();
+    foreach (var route in routes)
+    {
+
+        if (route.Last() != "end")
+        {
+            var possibleNexts = new List<string>();
+            foreach (var connection in connections)
+            {
+                if (connection[0] == route.Last())
+                {
+                    if (connection[1].ToUpper() == connection[1])
+                    {
+                        possibleNexts.Add(connection[1]);
+                    }
+                    else if(CanVisitSmallCave(route, connection[1], out string c))
+                    {
+                        possibleNexts.Add(connection[1] + c);
+                    }
+                }
+            }
+
+            foreach (var possibleNext in possibleNexts)
+            {
+
+                var n = route.Concat(new List<string> { possibleNext }).ToList();
+                if(n.Last().EndsWith("*"))
+                {
+                    n[n.Count - 1] = n[n.Count - 1].TrimEnd('*');
+                    n[0] = "*" + n[0];
+                }
+                newroutes.Add(n);
+            }
+        }
+        else if (route.Last() == "end")
+        {
+            newroutes.Add(route);
+        }
+
+    }
+    newroutes = newroutes.Distinct().ToList();
+
+    routes = newroutes;
+
+    var ends = routes.Count(x => x.Last() == "end");
+    var all = routes.Count();
+    foundEnd = ends == all;
+}
+
+return "number of routes " + routes.Count + " " + string.Join("\r\n ", routes.Select(x => string.Join(", ", x)));
+
+ private bool CanVisitSmallCave(List<string> route, string v, out string c)
+{
+    c = "";
+    if(v == "start")
+    {
+        return false;
+    }
+    if (!route.Contains(v))
+    {
+        return true;
+    }
+   if( route.First() == "*start")
+    {
+       return false;
+    }
+    else
+    {
+        c = "*";
+        return true;
+    }
+}
