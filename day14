@@ -9,7 +9,7 @@ for(int i = 1; i < rows.Length; i++)
     dict.Add(r[0], r[1]);
 }
 
-var loops = 4;
+var loops = 10;
 var returnstring = "";
 for(int i = 0; i< loops; i++)
 {
