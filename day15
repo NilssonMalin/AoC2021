@@ -1,0 +1,115 @@
+//Part 1 
+var input= @"";
+var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+var arr = new List<List<int>>();
+var dist = new List<List<int>>();
+foreach (var row in rows)
+{
+    var intRow = row.Select(x => int.Parse(x.ToString()));
+    arr.Add(intRow.ToList());
+    var distRow = new List<int>();
+    for (int i = 0; i < row.Length; i++)
+    {
+        distRow.Add(int.MaxValue);
+    }
+    dist.Add(distRow);
+}
+dist[0][0] = 0;
+var visited = new List<string>();
+
+for (int i = 0; i < arr.Count; i++)
+{
+    var row = arr[i];
+    for (int j = 0; j < row.Count; j++)
+    {
+        visited.Add(j + "," + i);
+        CheckNeighbours(arr, dist, i, j, visited);
+
+    }
+}
+
+
+return " dist " + dist.Last().Last();
+
+
+
+private void CheckNeighbours(List<List<int>> arr, List<List<int>> dist, int x, int y, List<string> visited)
+{
+    var listToRevisit = new List<string>();
+    var commmingFrom = dist[x][y];
+    
+    //norr
+    var newX = x - 1;
+    var newY = y;
+    if (newX >= 0 && newY >= 0 && newX < dist.Count() && newY < dist[0].Count())//&& !visited.Contains(newX + "," + newY))
+    {
+        var newDist = commmingFrom + arr[newX][newY];
+        var oldDist = dist[newX][newY];
+        if (oldDist > newDist)
+        {
+            dist[newX][newY] = newDist;
+            if (oldDist < int.MaxValue)
+            {
+                listToRevisit.Add(newX + "," + newY);
+            }
+        }
+    }
+
+    //väst
+    newX = x;
+    newY = y - 1;
+    if (newX >= 0 && newY >= 0 && newX < dist.Count() && newY < dist[0].Count())// && !visited.Contains(newX + "," + newY))
+    {
+        var newDist = commmingFrom + arr[newX][newY];
+        var oldDist = dist[newX][newY];
+        if (oldDist > newDist)
+        {
+            dist[newX][newY] = newDist;
+            if (oldDist < int.MaxValue)
+            {
+                listToRevisit.Add(newX + "," + newY);
+            }
+        }
+    }
+
+    //öst
+    newX = x;
+    newY = y + 1;
+    if (newX >= 0 && newY >= 0 && newX < dist.Count() && newY < dist[0].Count())//&& !visited.Contains(newX + "," + newY))
+    {
+        var newDist = commmingFrom + arr[newX][newY];
+        var oldDist = dist[newX][newY];
+        if (oldDist > newDist)
+        {
+            dist[newX][newY] = newDist;
+            if (oldDist < int.MaxValue)
+            {
+                listToRevisit.Add(newX + "," + newY);
+            }
+        }
+    }
+
+    //syd
+    newX = x + 1;
+    newY = y;
+    if (newX >= 0 && newY >= 0 && newX < dist.Count() && newY < dist[0].Count())//&& !visited.Contains(newX + "," + newY))
+    {
+        var newDist = commmingFrom + arr[newX][newY];
+        var oldDist = dist[newX][newY];
+        if (oldDist > newDist)
+        {
+            dist[newX][newY] = newDist;
+            if (oldDist < int.MaxValue)
+            {
+                listToRevisit.Add(newX + "," + newY);
+            }
+        }
+    }
+
+    foreach (var item in listToRevisit)
+    {
+        var i = int.Parse(item.Split(',')[0]);
+        var j = int.Parse(item.Split(',')[1]);
+        CheckNeighbours(arr, dist, i, j, visited);
+    }
+}
