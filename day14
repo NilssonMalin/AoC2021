@@ -1,0 +1,109 @@
+
+
+
+
+
+//Total remake for Part 2
+
+var input = @"";
+var rows = input.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+var start = rows[0];
+
+var stats = new Dictionary<string, long>();
+//första och sista
+stats["*" + start[0]] = 1;
+stats[start[start.Length - 1] + "*"] = 1;
+
+for (var i = 0; i < start.Length - 1; i++)
+{
+    var pair = "" +  start[i] + start[i + 1];
+    stats[pair] = (stats.Keys.Contains(pair) ? stats[pair] + 1 : 1);
+}
+
+
+var dict = new Dictionary<string, string>();
+for(int i = 1; i < rows.Length; i++)
+{
+    var r = rows[i].Split(new string[] { " -> " }, StringSplitOptions.RemoveEmptyEntries);
+    dict.Add(r[0], r[1]);
+}
+
+var loops = 40;
+for(int i = 0; i< loops; i++)
+{
+    var temp = new Dictionary<string, long>(stats);
+    foreach (var item in dict)
+    {
+        if (stats.ContainsKey(item.Key))
+        {
+            var c1 = item.Key[0];
+            var c2 = item.Key[1];
+            var new1 = c1 + item.Value;
+            var new2 = item.Value + c2;
+            var prevCount = stats[item.Key];
+            if (temp.Keys.Contains(item.Key))
+            {
+                temp[item.Key] = temp[item.Key] - prevCount;
+            }
+            else
+            {
+               temp.Add(item.Key, -prevCount);
+            }
+
+            if (temp.Keys.Contains(new1))
+            {
+                temp[new1] = temp[new1] + prevCount;
+            }
+            else
+            {
+                temp.Add(new1, prevCount);
+            }
+
+            if (temp.Keys.Contains(new2))
+            {
+                temp[new2] = temp[new2] + prevCount;
+            }
+            else
+            {
+                temp.Add(new2, prevCount);
+            }
+        }
+    }
+
+    stats = temp;
+}
+var singleCount = new Dictionary<char, long>();
+
+foreach(var s in stats)
+{
+    var c1 = s.Key[0];
+    var c2 = s.Key[1];
+    if (c1 != '*')
+    {
+        if (singleCount.Keys.Contains(c1))
+        {
+            singleCount[c1] += s.Value;
+        }
+        else
+        {
+            singleCount.Add(c1, s.Value);
+        }
+    }
+    if (c2 != '*')
+    {
+        if (singleCount.Keys.Contains(c2))
+        {
+            singleCount[c2] += s.Value;
+        }
+        else
+        {
+            singleCount.Add(c2, s.Value);
+        }
+    }
+}
+
+var g = singleCount.OrderBy(x => x.Value);
+
+var f = g.Last().Value / 2;
+var l = g.First().Value / 2;
+return " f " + f + " l " + l + " diff " + (f - l) ;
